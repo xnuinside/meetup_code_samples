@@ -1,18 +1,20 @@
-
-cargo_example = {"id": "123123", "dates": {"start": "2020-10-10", "end": "2020-11-10"},
-                 "product": {"name": "Elec'sOil",
-                             "uid": "elec109ui"
-                             }, "quantity": { "value": 450,
-                                              "id": "mt"
-                                              }}
-
 from pympler.asizeof import asizeof
+from dataclasses import dataclass
+from collections import namedtuple
 
 
-print("Size of dict", asizeof(cargo_example))
-print("Size of dict 'product'", asizeof(cargo_example["product"]))
-print("Size of dict 'quantity'", asizeof(cargo_example["quantity"]))
-print("Size of dict 'dates'", asizeof(cargo_example["dates"]))
+cargo_one_elem_example = {
+    "id": "123123",
+    "dates": {"start": "2020-10-10", "end": "2020-11-10"},
+    "product": {"name": "Elec'sOil", "uid": "elec109ui"},
+    "quantity": { "value": 450, "id": "mt"}
+}
+
+
+print("Size of dict", asizeof(cargo_one_elem_example))
+print("Size of dict 'product'", asizeof(cargo_one_elem_example["product"]))
+print("Size of dict 'quantity'", asizeof(cargo_one_elem_example["quantity"]))
+print("Size of dict 'dates'", asizeof(cargo_one_elem_example["dates"]))
 
 
 class Base:
@@ -49,9 +51,6 @@ print("Size of one Product", asizeof(one_product.__dict__))
 one_product_slots = ProductSlots("Elec'sOil", "elec109ui")
 print("Size of one ProductSlots", asizeof(one_product_slots))
 
-from collections import namedtuple
-
-
 simple_tuple = ("Elec'sOil", "elec109ui")
 # py3.7:  200
 print("Size of one simple_tuple", asizeof(simple_tuple))
@@ -60,9 +59,6 @@ product = namedtuple("ProductNamedTuple", ['name', 'uid'])
 one_product_named = product("Elec'sOil", "elec109ui")
 # py3.7:  200
 print("Size of one named tuple", asizeof(one_product_named))
-
-
-from dataclasses import dataclass
 
 @dataclass
 class ProductNamedDataclass:
