@@ -1,7 +1,7 @@
 from pympler.asizeof import asizeof
 from dataclasses import dataclass
 from collections import namedtuple
-
+from frozendict import frozendict
 
 cargo_one_elem_example = {
     "id": "123123",
@@ -80,7 +80,6 @@ class OptimisedBase:
 
     def __getitem__(self, key):
         return self.__getattribute__(key)
-
 
 class ProductSlotsWithOptimisedBase(OptimisedBase):
 
@@ -204,9 +203,9 @@ optimized_multi_cargo = []
 def converter(dict_to_convert, class_mapper):
     for key  in dict_to_convert:
         if isinstance(multi_cargo_example[0][key], dict):
-            yield class_mapper[key](**multi_cargo_example[0][key])
+            yield class_mapper[key](**dict_to_convert[key])
         else:
-            yield class_mapper[key](multi_cargo_example[0][key])
+            yield class_mapper[key](dict_to_convert[key])
 
 
 for i in range(len(multi_cargo_example)):
@@ -255,10 +254,14 @@ class OptimisedBaseUniq:
             cls._instances[instance_args] = obj
             return obj
 
+    def __getitem__(self, key):
+        #return eval(f'self.{key})
+        return self.__getattribute__(key)
+
 
 class ProductUnique(OptimisedBaseUniq):
 
-    __slots__ = ['name', 'uid']
+    __slots__ = ['name','uid']
 
     def __init__(self, name, uid):
         self.name = name
@@ -285,3 +288,86 @@ for i in range(len(multi_cargo_example)):
 # 4248
 print('Size same data with unique per args class-dict-behavior',
       asizeof(optimized_multi_cargo_unique_product))
+
+multi_cargo_example_frozen = []
+
+for i in range(len(multi_cargo_example)):
+    multi_cargo_example_frozen.append(frozendict(multi_cargo_example[i]))
+
+print("Size of frozen dict", asizeof(multi_cargo_example_frozen))
+
+
+multi_cargo_example = [{"id": "123123",
+                        "dates": {"start": "2020-10-10", "end": "2020-11-10"}, "product": {"name":
+                                                                                                          "Elec'sOil",
+                                                                                "uid": "elec109ui",
+                                                                    }, "quantity": {
+                                                                        "value": 450,
+                                                                        "id": "mt"
+                                                                    }},
+                       {"id": "223123", "dates": {"start": "2020-12-12", "end": "2021-01-10"}, "product": {"name":
+                                                                                                               "Elec'sOil",
+                                                                                "uid": "elec109ui",
+                                                                    }, "quantity": {
+                                                                        "value": 4500,
+                                                                        "id": "mt"
+                                                                    }},
+                       {"id": "323123","dates": {"start": "2020-11-10", "end": "2020-12-10"}, "product": {"name":
+                                                                                                              "Elec'sOil",
+                                                                                           "uid": "elec109ui",
+                                                                                           }, "quantity": {
+                           "value": 1450,
+                           "id": "mt"
+                       }},
+{"id": "423123","dates": {"start": "2020-11-10", "end": "2020-12-10"}, "product": {"name":
+                                                                                                              "Elec'sOil",
+                                                                                           "uid": "elec109ui",
+                                                                                           }, "quantity": {
+                           "value": 11450,
+                           "id": "mt"
+                       }},
+{"id": "523123","dates": {"start": "2020-11-10", "end": "2020-12-10"}, "product": {"name":
+                                                                                                              "Elec'sOil",
+                                                                                           "uid": "elec109ui",
+                                                                                           }, "quantity": {
+                           "value": 2450,
+                           "id": "mt"
+                       }}
+                       ]
+
+
+products = {"elec109ui": {"name": "Elec'sOil", "uid": "elec109ui"}}
+
+
+multi_cargo_example_with_unique_dict = [{"id": "123123",
+                        "dates": {"start": "2020-10-10", "end": "2020-11-10"}, "product": products["elec109ui"],
+                                         "quantity": {
+                                                                        "value": 450,
+                                                                        "id": "mt"
+                                                                    }},
+                       {"id": "223123", "dates": {"start": "2020-12-12", "end": "2021-01-10"}, "product": products["elec109ui"], "quantity": {
+                                                                        "value": 4500,
+                                                                        "id": "mt"
+                                                                    }},
+                       {"id": "323123","dates": {"start": "2020-11-10", "end": "2020-12-10"},  "product": products["elec109ui"], "quantity": {
+                           "value": 1450,
+                           "id": "mt"
+                       }},
+{"id": "423123","dates": {"start": "2020-11-10", "end": "2020-12-10"}, "product": products["elec109ui"], "quantity": {
+                           "value": 11450,
+                           "id": "mt"
+                       }},
+{"id": "523123","dates": {"start": "2020-11-10", "end": "2020-12-10"}, "product": products["elec109ui"], "quantity": {
+                           "value": 2450,
+                           "id": "mt"
+                       }}
+                       ]
+
+# py 37: 6528
+print("Size of base dict: ", asizeof(multi_cargo_example))
+# py 37: 5536
+print("Size of dict with unique product: ", asizeof(multi_cargo_example_with_unique_dict))
+
+# same because of naive python optimization
+print(id(multi_cargo_example_with_unique_dict[3]['quantity']['id']),
+      id(multi_cargo_example_with_unique_dict[4]['quantity']['id']))
