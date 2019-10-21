@@ -6,10 +6,19 @@ from frozendict import frozendict
 cargo_one_elem_example = {
     "id": "123123",
     "dates": {"start": "2020-10-10", "end": "2020-11-10"},
-    "product": {"name": "Elec'sOil", "uid": "elec109ui"},
     "quantity": { "value": 450, "id": "mt"}
 }
-
+{
+  "id": 12318912,
+  "product": {"name": "Elec'sOil", "uid": "elec109ui"},
+  "quantity": {
+   "value": 2380,
+   "id": "mt"
+  },
+  "dates": {
+   "start": "2200-10-14T00:00:00",
+   "end": "2200-11-11T00:00:00"
+  }
 
 print("Size of dict", asizeof(cargo_one_elem_example))
 print("Size of dict 'product'", asizeof(cargo_one_elem_example["product"]))
@@ -371,3 +380,30 @@ print("Size of dict with unique product: ", asizeof(multi_cargo_example_with_uni
 # same because of naive python optimization
 print(id(multi_cargo_example_with_unique_dict[3]['quantity']['id']),
       id(multi_cargo_example_with_unique_dict[4]['quantity']['id']))
+
+
+# check that type annotations does not inrease objects memory usage
+
+class ProductUniqueWithTypeAnnotations(OptimisedBaseUniq):
+
+    __slots__ = ['name','uid']
+
+    def __init__(self, name: str, uid:str):
+        self.name = name
+        self.uid = uid
+
+
+class ProductUniqueWithTypeAnnotationsCustomTyoes(OptimisedBaseUniq):
+
+    __slots__ = ['name','uid']
+
+    def __init__(self, name: OptimizedQuantity, uid:Dates):
+        self.name = name
+        self.uid = uid
+
+
+one_product_slots = ProductUniqueWithTypeAnnotations("Elec'sOil", uid="elec109ui")
+print("Size of one ProductUniqueWithTypeAnnotations", asizeof(one_product_slots))
+
+one_product_slots = ProductUniqueWithTypeAnnotationsCustomTyoes("Elec'sOil", uid="elec109ui")
+print("Size of one ProductUniqueWithTypeAnnotationsCustomTyoes", asizeof(one_product_slots))
