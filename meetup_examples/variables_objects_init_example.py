@@ -157,10 +157,12 @@ print(200+200 is c)
 
 print(f"\n{end}")
 
+
 # defaults initialisation, why you should not use mutable objects in functions defaults
 def cat_relative_ids(cat_id, cat_family=[]):
     [cat_family.append(x) for x in range(10)]
     return cat_family
+
 
 cat_relative_ids(1)
 ids = cat_relative_ids(2)

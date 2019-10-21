@@ -18,6 +18,7 @@ cargo = [{
                              datetime(2200, 11, 12), datetime(2200, 11, 13)])}
               } for _ in range(6000)]
 
+
 def datetime_serialize(o):
     if isinstance(o, datetime):
         return o.isoformat()

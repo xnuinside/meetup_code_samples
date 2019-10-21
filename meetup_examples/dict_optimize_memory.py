@@ -40,7 +40,7 @@ class ProductSlots(Base):
 one_product = Product("Elec'sOil", "elec109ui")
 
 print("Size of one Product", asizeof(one_product))
-print("Size of one Product", asizeof(one_product.__dict__))
+print("Size of one Product __dict__", asizeof(one_product.__dict__))
 
 one_product_slots = ProductSlots("Elec'sOil", "elec109ui")
 print("Size of one ProductSlots", asizeof(one_product_slots))
@@ -50,9 +50,14 @@ simple_tuple = ("Elec'sOil", "elec109ui")
 print("Size of one simple_tuple", asizeof(simple_tuple))
 
 product = namedtuple("ProductNamedTuple", ['name', 'uid'])
-one_product_named = product("Elec'sOil", "elec109ui")
+pr_named_tuple = product("Elec'sOil", "elec109ui")
 # py3.7:  200
-print("Size of one named tuple", asizeof(one_product_named))
+print("Size of one named tuple", asizeof(pr_named_tuple))
+
+
+frozendict_product = frozendict({"name": "Elec'sOil", "uid": "elec109ui"})
+print("Size of one Frozen Dict", asizeof(frozendict_product))
+
 
 @dataclass
 class ProductNamedDataclass:
@@ -65,7 +70,7 @@ dataclass_product = ProductNamedDataclass("Elec'sOil", "elec109ui")
 print("Size of dataclass", asizeof(dataclass_product))
 
 
-class OptimisedBase:
+class BaseSlots:
 
     __slots__ = []
 
@@ -75,7 +80,8 @@ class OptimisedBase:
     def __getitem__(self, key):
         return self.__getattribute__(key)
 
-class ProductSlotsWithOptimisedBase(OptimisedBase):
+
+class ProductSlotsWithBaseSlots(BaseSlots):
 
     __slots__ = ['name', 'uid']
 
@@ -84,16 +90,15 @@ class ProductSlotsWithOptimisedBase(OptimisedBase):
         self.uid = uid
 
 
-one_product_slots = ProductSlotsWithOptimisedBase("Elec'sOil", "elec109ui")
-print("Size of one ProductSlotsWithOptimisedBase", asizeof(one_product_slots))
+one_product_slots = ProductSlotsWithBaseSlots("Elec'sOil", "elec109ui")
+print("Size of one ProductSlotsWithBaseSlots", asizeof(one_product_slots))
 
 print(one_product_slots['name'])
 one_product_slots['name'] = 'new'
 print(one_product_slots['name'])
 
 
-
-class OptimizedQuantity(OptimisedBase):
+class OptimizedQuantity(BaseSlots):
 
     __slots__ = ['value', 'id']
 
@@ -102,7 +107,7 @@ class OptimizedQuantity(OptimisedBase):
         self.id = id
 
 
-class Cargo(OptimisedBase):
+class Cargo(BaseSlots):
 
     __slots__ = ['id', 'dates', 'product', 'quantity']
 
@@ -113,7 +118,7 @@ class Cargo(OptimisedBase):
         self.quantity = quantity
 
 
-class Dates(OptimisedBase):
+class Dates(BaseSlots):
 
     __slots__ = ['start', 'end']
 
@@ -121,20 +126,13 @@ class Dates(OptimisedBase):
         self.start = start
         self.end = end
 
-dates = Dates('2010-03-10', '2010-03-10')
-print(asizeof(dates))
-cargo_dict_example = {"dates": {"start": "2020-10-10", "end": "2020-11-10"},
-                      "product": {"name": "Elec'sOil",
-                                  "uid": "elec109ui",},
-                      "quantity": {"value": 450, "id": "mt"}}
 
-
-cargo_optimised = Cargo("123123", Dates('2010-03-10', '2010-03-10'),
-                        ProductSlotsWithOptimisedBase("Elec'sOil",  "elec109ui"),
+cargo_optimised = Cargo("123123", Dates("2200-10-14T00:00:00", "2200-11-11T00:00:00"),
+                        ProductSlotsWithBaseSlots("Elec'sOil", "elec109ui"),
                         OptimizedQuantity(450, "mt"))
 
 # size of dict - 1816
-print("cargo_dict_example:", asizeof(cargo_dict_example))
+print("cargo_dict_example:", asizeof(cargo_example))
 
 # optimized structure - 512
 print("cargo_optimised:", asizeof(cargo_optimised))
@@ -143,93 +141,58 @@ print(cargo_optimised['product']['name'])
 
 # yes, but we have grapql schemas only
 
-
-
-multi_cargo_example = [{"id": "123123",
-                        "dates": {"start": "2020-10-10", "end": "2020-11-10"}, "product": {"name":
-                                                                                                          "Elec'sOil",
-                                                                                "uid": "elec109ui",
-                                                                    }, "quantity": {
-                                                                        "value": 450,
-                                                                        "id": "mt"
-                                                                    }},
-                       {"id": "223123", "dates": {"start": "2020-12-12", "end": "2021-01-10"}, "product": {"name":
-                                                                                                               "Elec'sOil",
-                                                                                "uid": "elec109ui",
-                                                                    }, "quantity": {
-                                                                        "value": 4500,
-                                                                        "id": "mt"
-                                                                    }},
-                       {"id": "323123","dates": {"start": "2020-11-10", "end": "2020-12-10"}, "product": {"name":
-                                                                                                              "Elec'sOil",
-                                                                                           "uid": "elec109ui",
-                                                                                           }, "quantity": {
-                           "value": 1450,
-                           "id": "mt"
-                       }},
-{"id": "423123","dates": {"start": "2020-11-10", "end": "2020-12-10"}, "product": {"name":
-                                                                                                              "Elec'sOil",
-                                                                                           "uid": "elec109ui",
-                                                                                           }, "quantity": {
-                           "value": 11450,
-                           "id": "mt"
-                       }},
-{"id": "523123","dates": {"start": "2020-11-10", "end": "2020-12-10"}, "product": {"name":
-                                                                                                              "Elec'sOil",
-                                                                                           "uid": "elec109ui",
-                                                                                           }, "quantity": {
-                           "value": 2450,
-                           "id": "mt"
-                       }}
-                       ]
+multi_cargo_example = [
+                {"id": 12318912,
+                 "product": {"name": "Elec'sOil", "uid": "elec109ui"},
+                 "quantity": {"value": 2380, "id": "mt"},
+                 "dates": {"start": "2200-10-14T00:00:00", "end": "2200-11-11T00:00:00"}},
+                {"id": 22318912,
+                 "product": {"name": "Elec'sOil", "uid": "elec109ui"},
+                 "quantity": {"value": 380, "id": "mt"},
+                 "dates": {"start": "2200-11-14T00:00:00", "end": "2200-12-11T00:00:00"}},
+                {"id": 32318912,
+                 "product": {"name": "Elec'sOil", "uid": "elec109ui"},
+                 "quantity": {"value": 2000, "id": "mt"},
+                 "dates": {"start": "2201-10-24T00:00:00", "end": "2230-11-11T00:00:00"}},
+                {"id": 42318912,
+                 "product": {"name": "Duper", "uid": "duper123"},
+                 "quantity": {"value": 1500, "id": "mt"},
+                 "dates": {"start": "2202-10-14T00:00:00", "end": "2203-11-11T00:00:00"}},
+                {"id": 52318912,
+                 "product": {"name": "Duper", "uid": "duper123"},
+                 "quantity": {"value": 60000, "id": "mt"},
+                 "dates": {"start": "2201-10-14T00:00:00", "end": "2201-11-11T00:00:00"}}]
 
 class_mapper = {
     "id": lambda x: x,
     "dates": Dates,
-    "product": ProductSlotsWithOptimisedBase,
+    "product": ProductSlotsWithBaseSlots,
     "quantity": OptimizedQuantity
 }
 
-print('Size of multicargo dict', asizeof(multi_cargo_example))
+print('Size of multicargo list with dicts', asizeof(multi_cargo_example))
 
 optimized_multi_cargo = []
 
-def converter(dict_to_convert, class_mapper):
-    for key  in dict_to_convert:
+
+def converter(dict_to_convert, _class_mapper):
+    for key in dict_to_convert:
         if isinstance(multi_cargo_example[0][key], dict):
-            yield class_mapper[key](**dict_to_convert[key])
+            yield {key: _class_mapper[key](**dict_to_convert[key])}
         else:
-            yield class_mapper[key](dict_to_convert[key])
+            yield {key: _class_mapper[key](dict_to_convert[key])}
 
 
-for i in range(len(multi_cargo_example)):
-    args = [value for value in converter(multi_cargo_example[i], class_mapper)]
-    optimized_multi_cargo.append(Cargo(*args))
+for i in multi_cargo_example:
+    kwargs = {}
+    [kwargs.update(value) for value in converter(i, class_mapper)]
+    optimized_multi_cargo.append(Cargo(**kwargs))
 
-# 4248 - py3.6
-print(asizeof(optimized_multi_cargo))
+print('Size of multicargo list with objects', asizeof(optimized_multi_cargo))
 
 # 1216 - py3.6
 print(optimized_multi_cargo[0]['id'])
 print(optimized_multi_cargo[2]['product']['name'])
-
-optimized_multi_cargo_without_generator = []
-def converter_no_gen(dict_to_convert, key):
-    if isinstance(multi_cargo_example[0][key], dict):
-        return class_mapper[key](**multi_cargo_example[0][key])
-    else:
-        return class_mapper[key](multi_cargo_example[0][key])
-
-
-for i in range(len(multi_cargo_example)):
-    args = [converter_no_gen(multi_cargo_example[i], key) for key in multi_cargo_example[i]]
-    optimized_multi_cargo_without_generator.append(Cargo(*args))
-
-
-# 1216 - py3.6
-print('Size same data with class-dict-behavior', asizeof(optimized_multi_cargo_without_generator))
-print(optimized_multi_cargo_without_generator[0]['id'])
-print(optimized_multi_cargo_without_generator[2]['product']['name'])
 
 
 class OptimisedBaseUniq:
@@ -249,13 +212,12 @@ class OptimisedBaseUniq:
             return obj
 
     def __getitem__(self, key):
-        #return eval(f'self.{key})
         return self.__getattribute__(key)
 
 
 class ProductUnique(OptimisedBaseUniq):
 
-    __slots__ = ['name','uid']
+    __slots__ = ['name', 'uid']
 
     def __init__(self, name, uid):
         self.name = name
@@ -275,9 +237,12 @@ class_mapper = {
 }
 
 
-for i in range(len(multi_cargo_example)):
-    args = [value for value in converter(multi_cargo_example[i], class_mapper)]
-    optimized_multi_cargo_unique_product.append(Cargo(*args))
+for i in multi_cargo_example:
+    kwargs = {}
+    [kwargs.update(value) for value in converter(i, class_mapper)]
+    optimized_multi_cargo_unique_product.append(Cargo(**kwargs))
+
+print('Size of multicargo list with unique objects', asizeof(optimized_multi_cargo_unique_product))
 
 # 4248
 print('Size same data with unique per args class-dict-behavior',
@@ -371,7 +336,7 @@ print(id(multi_cargo_example_with_unique_dict[3]['quantity']['id']),
 
 class ProductUniqueWithTypeAnnotations(OptimisedBaseUniq):
 
-    __slots__ = ['name','uid']
+    __slots__ = ['name', 'uid']
 
     def __init__(self, name: str, uid:str):
         self.name = name
