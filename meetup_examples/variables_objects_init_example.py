@@ -129,8 +129,6 @@ f = a + b
 # all ids same, because low integers in -5 to 256
 print(id(f), id(c), id(d))
 
-a = 200
-b = 300
 c = 500
 d = 500
 f = 200 + 300
@@ -147,6 +145,15 @@ f = a + b
 
 # in 3.6 and in 3.7!! f will be different from c and d, interning does not  working
 print(id(f), id(c), id(d))
+
+
+a = 200
+b = 200
+c = 400
+# False
+print(a+b is c)
+# True
+print(200+200 is c)
 
 print(f"\n{end}")
 
@@ -208,11 +215,15 @@ str3_2 = "python memory"
 str4_2 = "omg this is amazing python memory"
 print(id(str1_2), id(str2_2), id(str3_2), id(str4_2))
 
+str_name = "name"
+str_3 = "3"
+str1_3_concat = str_name + str3
 str1_3_c_1 = "name" + str(3)
 str1_3_c = "name" + "3"
 str_c = "name3"
 
-print(id(str1_3_c_1), id(str1_3_c), id(str_c))
+print("\nConcatenation result")
+print(id(str1_3_concat), id(str1_3_c_1), id(str1_3_c), id(str_c))
 
 dis.dis(lambda: "name" + str(3))
 dis.dis(lambda: "name" + "3")

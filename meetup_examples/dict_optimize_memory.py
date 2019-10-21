@@ -3,31 +3,18 @@ from dataclasses import dataclass
 from collections import namedtuple
 from frozendict import frozendict
 
-cargo_one_elem_example = {
-    "id": "123123",
-    "dates": {"start": "2020-10-10", "end": "2020-11-10"},
-    "quantity": { "value": 450, "id": "mt"}
-}
-{
-  "id": 12318912,
-  "product": {"name": "Elec'sOil", "uid": "elec109ui"},
-  "quantity": {
-   "value": 2380,
-   "id": "mt"
-  },
-  "dates": {
-   "start": "2200-10-14T00:00:00",
-   "end": "2200-11-11T00:00:00"
-  }
+cargo_example = {"id": 12318912,
+                 "product": {"name": "Elec'sOil", "uid": "elec109ui"},
+                 "quantity": {"value": 2380, "id": "mt"},
+                 "dates": {"start": "2200-10-14T00:00:00", "end": "2200-11-11T00:00:00"}}
 
-print("Size of dict", asizeof(cargo_one_elem_example))
-print("Size of dict 'product'", asizeof(cargo_one_elem_example["product"]))
-print("Size of dict 'quantity'", asizeof(cargo_one_elem_example["quantity"]))
-print("Size of dict 'dates'", asizeof(cargo_one_elem_example["dates"]))
+print("Size of dict", asizeof(cargo_example))
+print("Size of dict 'product'", asizeof(cargo_example["product"]))
+print("Size of dict 'quantity'", asizeof(cargo_example["quantity"]))
+print("Size of dict 'dates'", asizeof(cargo_example["dates"]))
 
 
 class Base:
-
     def __setitem__(self, key, value):
         self.__dict__[key] = value
 
@@ -42,9 +29,7 @@ class Product(Base):
         self.uid = uid
 
 
-
 class ProductSlots(Base):
-
     __slots__ = ['name', 'uid']
 
     def __init__(self, name, uid):
