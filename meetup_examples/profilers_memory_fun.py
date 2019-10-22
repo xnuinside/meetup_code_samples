@@ -1,22 +1,25 @@
 from guppy import hpy
-a = lambda: 10
+
 h = hpy()
 # heap size: 4619038 bytes
 print(h.heap())
+
+def funct_to_profile():
+    a = lambda: 10
+    b = lambda: 10
+    print(h.heap())
+    a()
+    b()
+    big_list_check = [{'1': 1} for _ in range(100000)]
+    print(h.heap())
+    c = big_list_check
 # imports must be here to check heap size step by step
 from memory_profiler import profile
 # heap size: 7085995 bytes
 print(h.heap())
 # add decorator profiler to our test method
-main = profile(a)
+main = profile(funct_to_profile)
 # heap size: 7091331 bytes
-print(h.heap())
 
 main()
-# heap size: 7770723 bytes
-print(h.heap())
-
-# report from memory_profiler ?!
-# Line #    Mem usage    Increment   Line Contents
-# ================================================
-#     2     19.2 MiB     19.2 MiB   a = lambda: 10
+# great result

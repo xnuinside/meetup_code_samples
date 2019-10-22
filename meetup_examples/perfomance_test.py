@@ -180,3 +180,28 @@ print('Dict ', timeit.timeit(find_product_with_name_dict_list_and_extract_attr, 
 print('Objects by dict keys', timeit.timeit(find_first_product_byid_in_optimized_list_and_extract_attr, number=10000))
 
 
+class ProductUnique:
+
+    __slots__ = ['name', 'uid']
+
+    def __init__(self, name, uid):
+        self.name = name
+        self.uid = uid
+
+
+one_product_slots = ProductUnique("Elec'sOil", uid="elec109ui")
+print("Size of one ProductSlotsWithOptimisedBase", asizeof(one_product_slots))
+
+
+optimized_multi_cargo_unique_product = []
+# convert to optimised objects from dict_optimize_memory
+
+for i in multi_cargo_example:
+    kwargs = {}
+    [kwargs.update(value) for value in converter(i, class_mapper)]
+    optimized_multi_cargo_unique_product.append(Cargo(**kwargs))
+
+print('\nFind all elems with product == name with for and return list')
+print('Dict ', timeit.timeit(find_product_with_name_dict_list_and_extract_attr, number=10000))
+print('Objects by dict keys', timeit.timeit(find_first_product_byid_in_optimized_list_and_extract_attr, number=10000))
+
