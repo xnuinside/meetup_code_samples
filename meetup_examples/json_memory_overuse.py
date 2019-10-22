@@ -3,9 +3,12 @@ from os.path import getsize
 from pympler.asizeof import asizeof
 import orjson
 import ujson
+import platform
+print(platform.machine())
+print(platform.version())
+print(platform.platform())
 
-
-file_path = 'data/shipments.json'
+file_path = 'data/cargo.json'
 
 print('File size', getsize(file_path), 'bytes')
 print(f'File size {getsize(file_path)/1048576:.2f}', 'mbytes')

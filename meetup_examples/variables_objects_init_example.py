@@ -109,13 +109,6 @@ function_2_with_ints(2)
 
 print(f"{end}\n")
 
-a = (1,2,)
-b = (1,2,)
-d = (1,2,)
-c = (1,2,)
-# same id in 3.7, different ids in 3.6
-print(id(a), id(b),  id(d), id(c))
-
 math_str = 'mathematical operations'
 
 print(f"\n{math_str}\n{start}")
@@ -227,8 +220,54 @@ str_c = "name3"
 print("\nConcatenation result")
 print(id(str1_3_concat), id(str1_3_c_1), id(str1_3_c), id(str_c))
 
+
+dis.dis(lambda: str_name + str3)
 dis.dis(lambda: "name" + str(3))
 dis.dis(lambda: "name" + "3")
 dis.dis(lambda: "name")
 
 print(f"{end}")
+
+print("Test object initialisation inside dicts")
+# Let's check that will be if we create a dict with int and str values
+test_dict = {'key1': 1, 'key2': 135673, 'key3': 'python', 'key4': 'very long and strange string',
+             'key1_1': 1, 'key2_2': 135673, 'key3_3': 'python', 'key4_4': 'very long and strange string'}
+print('1 ', id(test_dict['key1']), id(test_dict['key1_1']))
+print('135673 ', id(test_dict['key2']), id(test_dict['key2_2']))
+print('python ', id(test_dict['key3']), id(test_dict['key3_3']))
+print('very long and strange string ', id(test_dict['key4']), id(test_dict['key4_4']))
+
+print('\n')
+
+
+print('Test objects initialisation inside list')
+test_list = ['python', 1, 135673, 1, ['very long and strange string'], 135673,
+             'very long and strange string', 'very long and strange string',  'python']
+
+print('python ', id(test_list[0]), id(test_list[-1]))
+print('very long and strange string ', id(test_list[-3]), id(test_list[-2]))
+print('very long and strange string inside nested list ',  id(test_list[4][0]))
+print('135673 ', id(test_list[2]), id(test_list[5]))
+
+# containers initialisation
+a = (1, 2,)
+b = (1, 2,)
+d = (1, 2,)
+c = (1, 2,)
+# same ids in 3.7, different ids in 3.6
+print('Tuples')
+print(id(a), id(b),  id(d), id(c))
+
+a = [1, 2]
+b = [1, 2]
+d = [1, 2]
+c = [1, 2]
+print('Lists')
+print(id(a), id(b),  id(d), id(c))
+
+a = {'1': 1}
+b = {'1': 1}
+d = {'1': 1}
+c = {'1': 1}
+print('Dicts')
+print(id(a), id(b),  id(d), id(c))
