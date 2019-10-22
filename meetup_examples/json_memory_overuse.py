@@ -78,6 +78,16 @@ print('1', id(small_json_dict[1]['1']), id(small_json_dict[1]['11']))
 print('1345', id(small_json_dict[1]['1345']), id(small_json_dict[1]['1345']))
 print('python', id(small_json_dict[1]['2']), id(small_json_dict[1]['21']))
 print('python is a very funny language', id(small_json_dict[1]['long_str']), id(small_json_dict[1]['long_str1']))
+print('dict3')
+print('1', id(small_json_dict[2]['1']), id(small_json_dict[2]['11']))
+print('1345', id(small_json_dict[2]['1345']), id(small_json_dict[2]['1345']))
+print('python', id(small_json_dict[2]['2']), id(small_json_dict[2]['21']))
+print('python is a very funny language', id(small_json_dict[2]['long_str']), id(small_json_dict[2]['long_str1']))
+print('dict4')
+print('1', id(small_json_dict[3]['1']), id(small_json_dict[3]['11']))
+print('1345', id(small_json_dict[3]['1345']), id(small_json_dict[3]['1345']))
+print('python', id(small_json_dict[3]['2']), id(small_json_dict[3]['21']))
+print('python is a very funny language', id(small_json_dict[3]['long_str']), id(small_json_dict[3]['long_str1']))
 
 # create one more context to check context vars
 with open("data/small_json.json", 'r') as small_json:
