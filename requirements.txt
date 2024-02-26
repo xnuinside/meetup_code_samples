@@ -1,5 +1,5 @@
 Pympler==0.7
-orjson==1.35
+orjson==3.9.15
 ujson==2.0.11
 guppy3==3.0.8
 memory-profiler==0.55.0
